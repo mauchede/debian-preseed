@@ -1,0 +1,28 @@
+#!/bin/sh
+cd "`dirname "$0"`/../"
+
+BOOT_FILE=${BOOT_FILE:-images/boot.img}
+NETINST_FILE=${NETINST_FILE:-images/netinst.iso}
+
+fail() {
+    echo $1 1>&2
+    echo "Usage: $0 [DEVICE]" 1>&2
+    exit 1
+}
+[ 0 != $(id -u) ] && \
+    fail "Impossible to prepare the stick without root privileges."
+[ $# -lt 1 ] && \
+    fail "Invalid number of arguments"
+udevadm info --query=all --name=$1 | grep ID_BUS | grep -qv usb && \
+    fail "$1 is not an USB device."
+[ ! -f $BOOT_FILE ] && \
+    fail "Image $BOOT_FILE can not be found."
+[ ! -f $NETINST_FILE ] && \
+    fail "Image $NETINST_FILE can not be found."
+
+dd if=$BOOT_FILE of=$1
+
+mount $1 /mnt
+cp $NETINST_FILE /mnt/netinst.iso
+umount /mnt
+sync

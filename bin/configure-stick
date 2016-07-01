@@ -1,0 +1,37 @@
+#!/bin/sh
+set -x
+cd "`dirname "$0"`/../"
+
+fail() {
+    echo $1 1>&2
+    echo "Usage: $0 [DEVICE]" 1>&2
+    exit 1
+}
+[ $# -lt 1 ] && \
+    fail "Invalid number of arguments"
+[ 0 != $(id -u) ] && \
+    fail "Impossible to prepare the stick without root privileges."
+udevadm info --query=all --name=$1 | grep ID_BUS | grep -qv usb && \
+    fail "$1 is not an USB device."
+
+mount $1 /mnt
+
+cp -f src/syslinux.cfg /mnt/syslinux.cfg
+sed -i "s@%LANGUAGE%@${PRESEED_LANGUAGE:-en}@g" /mnt/syslinux.cfg
+sed -i "s@%COUNTRY%@${PRESEED_COUNTRY:-US}@g" /mnt/syslinux.cfg
+sed -i "s@%LOCALE%@${PRESEED_LOCALE:-en_US}@g" /mnt/syslinux.cfg
+sed -i "s@%KEYMAP%@${PRESEED_KEYMAP:-us}@g" /mnt/syslinux.cfg
+
+cp -f src/preseed.cfg /mnt/preseed.cfg
+sed -i "s@%LANGUAGE%@${PRESEED_LANGUAGE:-en}@g" /mnt/preseed.cfg
+sed -i "s@%COUNTRY%@${PRESEED_COUNTRY:-US}@g" /mnt/preseed.cfg
+sed -i "s@%LOCALE%@${PRESEED_LOCALE:-en_US}@g" /mnt/preseed.cfg
+sed -i "s@%KEYMAP%@${PRESEED_KEYMAP:-us}@g" /mnt/preseed.cfg
+sed -i "s@%HOSTNAME%@${HOSTNAME:-unassigned-hostname}@g" /mnt/preseed.cfg
+sed -i "s@%USER_FULLNAME%@${PRESEED_USER_FULLNAME:-Debian User}@g" /mnt/preseed.cfg
+sed -i "s@%USERNAME%@${PRESEED_USERNAME:-debian}@g" /mnt/preseed.cfg
+sed -i "s@%PASSWORD%@${PRESEED_PASSWORD:-insecure}@g" /mnt/preseed.cfg
+sed -i "s@%TIMEZONE%@${PRESEED_TIMEZONE:-US/Eastern}@g" /mnt/preseed.cfg
+
+umount /mnt
+sync

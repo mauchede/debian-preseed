@@ -1,0 +1,7 @@
+#!/bin/sh
+cd "`dirname "$0"`/../images"
+
+curl -sLo boot.img.gz "http://ftp.fr.debian.org/debian/dists/jessie/main/installer-amd64/current/images/hd-media/boot.img.gz"
+gunzip -q boot.img.gz
+
+curl -sLo netinst.iso "http://cdimage.debian.org/debian-cd/8.5.0/amd64/iso-cd/debian-8.5.0-amd64-netinst.iso"

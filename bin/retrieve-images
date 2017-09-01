@@ -1,7 +1,17 @@
 #!/bin/sh
-cd "`dirname "$0"`/../images"
+set -ex
+cd "$(dirname "$0")/../images"
 
-curl -sLo boot.img.gz "http://ftp.fr.debian.org/debian/dists/jessie/main/installer-amd64/current/images/hd-media/boot.img.gz"
-gunzip -q boot.img.gz
+# Remove old images
 
-curl -sLo netinst.iso "http://cdimage.debian.org/debian-cd/8.5.0/amd64/iso-cd/debian-8.5.0-amd64-netinst.iso"
+rm --force boot.img* netinst.iso
+
+# Retrieve boot.img
+
+curl --location --output boot.img.gz "http://ftp.fr.debian.org/debian/dists/jessie/main/installer-amd64/current/images/hd-media/boot.img.gz"
+gunzip --quiet boot.img.gz
+
+# Retrieve netinst.iso
+
+export $(curl "https://raw.githubusercontent.com/timonier/version-lister/release/generated/debian/latest" | xargs)
+curl --location --output netinst.iso "http://cdimage.debian.org/debian-cd/${DEBIAN_VERSION}/amd64/iso-cd/debian-${DEBIAN_VERSION}-amd64-netinst.iso"

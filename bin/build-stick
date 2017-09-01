@@ -1,28 +1,44 @@
 #!/bin/sh
-cd "`dirname "$0"`/../"
+set -ex
+cd "$(dirname "$0")/../"
 
-BOOT_FILE=${BOOT_FILE:-images/boot.img}
-NETINST_FILE=${NETINST_FILE:-images/netinst.iso}
+# Check environment
 
 fail() {
-    echo $1 1>&2
-    echo "Usage: $0 [DEVICE]" 1>&2
+    echo 1>&2 "$1"
+    echo 1>&2 "Usage: $(basename "$0") [DEVICE]"
     exit 1
 }
-[ 0 != $(id -u) ] && \
-    fail "Impossible to prepare the stick without root privileges."
-[ $# -lt 1 ] && \
+
+if [ "$#" -lt 1 ] ; then
     fail "Invalid number of arguments"
-udevadm info --query=all --name=$1 | grep ID_BUS | grep -qv usb && \
-    fail "$1 is not an USB device."
-[ ! -f $BOOT_FILE ] && \
-    fail "Image $BOOT_FILE can not be found."
-[ ! -f $NETINST_FILE ] && \
-    fail "Image $NETINST_FILE can not be found."
+fi
 
-dd if=$BOOT_FILE of=$1
+if [ "$(id --user)" -ne 0 ] ; then
+    fail "Impossible to prepare the stick without root privileges."
+fi
 
-mount $1 /mnt
-cp $NETINST_FILE /mnt/netinst.iso
-umount /mnt
+if udevadm info --query all --name "$1" | grep ID_BUS | grep --invert-match --quiet usb ; then
+    fail "\"$1\" is not an USB device."
+fi
+
+export BOOT_FILE="${BOOT_FILE:-images/boot.img}"
+if [ ! -f "${BOOT_FILE}" ] ; then
+    fail "Image \"${BOOT_FILE}\" can not be found."
+fi
+
+export NETINST_FILE=${NETINST_FILE:-images/netinst.iso}
+if [ ! -f "${NETINST_FILE}" ] ; then
+    fail "Image \"${NETINST_FILE}\" can not be found."
+fi
+
+# Install boot.img on stick
+
+dd if="${BOOT_FILE}" of="$1"
+
+# Copy netinst.iso on stick
+
+mount "$1" /mnt
+cp "${NETINST_FILE}" /mnt/netinst.iso
 sync
+umount /mnt

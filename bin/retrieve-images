@@ -13,5 +13,5 @@ gunzip --quiet boot.img.gz
 
 # Retrieve netinst.iso
 
-export $(curl "https://raw.githubusercontent.com/timonier/version-lister/release/generated/debian/latest" | xargs)
+export $(curl "https://raw.githubusercontent.com/timonier/version-lister/release/generated/_/debian/latest" | xargs)
 curl --location --output netinst.iso "http://cdimage.debian.org/debian-cd/${DEBIAN_VERSION}/amd64/iso-cd/debian-${DEBIAN_VERSION}-amd64-netinst.iso"

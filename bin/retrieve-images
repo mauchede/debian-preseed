@@ -8,7 +8,7 @@ rm --force boot.img* netinst.iso
 
 # Retrieve boot.img
 
-curl --location --output boot.img.gz "http://ftp.fr.debian.org/debian/dists/jessie/main/installer-amd64/current/images/hd-media/boot.img.gz"
+curl --location --output boot.img.gz "http://ftp.fr.debian.org/debian/dists/stable/main/installer-amd64/current/images/hd-media/boot.img.gz"
 gunzip --quiet boot.img.gz
 
 # Retrieve netinst.iso

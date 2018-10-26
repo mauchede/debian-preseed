@@ -4,22 +4,22 @@ cd "$(dirname "$0")"/..
 
 # Check environment
 
-fail() {
+_fail() {
     echo 1>&2 "$1"
     echo 1>&2 "Usage: $(basename "$0") [DEVICE]"
     exit 255
 }
 
 if [ "$#" -lt 1 ]; then
-    fail "Invalid number of arguments"
+    _fail "Invalid number of arguments"
 fi
 
 if [ "$(id --user)" -ne 0 ]; then
-    fail "Impossible to execute this script without root privileges."
+    _fail "Impossible to execute this script without root privileges."
 fi
 
 if ! udevadm info --query all --name "$1" | grep -q "ID_BUS=usb"; then
-    fail "\"$1\" is not an USB device."
+    _fail "\"$1\" is not an USB device."
 fi
 
 # Mount stick

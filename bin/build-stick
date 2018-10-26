@@ -4,32 +4,32 @@ cd "$(dirname "$0")"/..
 
 # Check environment
 
-fail() {
+_fail() {
     echo 1>&2 "$1"
     echo 1>&2 "Usage: $(basename "$0") [DEVICE]"
     exit 255
 }
 
 if [ "$#" -lt 1 ]; then
-    fail "Invalid number of arguments"
+    _fail "Invalid number of arguments"
 fi
 
 if [ "$(id --user)" -ne 0 ]; then
-    fail "Impossible to execute this script without root privileges."
+    _fail "Impossible to execute this script without root privileges."
 fi
 
 if ! udevadm info --query all --name "$1" | grep -q "ID_BUS=usb"; then
-    fail "\"$1\" is not an USB device."
+    _fail "\"$1\" is not an USB device."
 fi
 
 BOOT_FILE="${BOOT_FILE:-images/boot.img}"
 if [ ! -f "${BOOT_FILE}" ]; then
-    fail "Image \"${BOOT_FILE}\" can not be found."
+    _fail "Image \"${BOOT_FILE}\" can not be found."
 fi
 
 NETINST_FILE=${NETINST_FILE:-images/netinst.iso}
 if [ ! -f "${NETINST_FILE}" ]; then
-    fail "Image \"${NETINST_FILE}\" can not be found."
+    _fail "Image \"${NETINST_FILE}\" can not be found."
 fi
 
 # Install boot.img on stick

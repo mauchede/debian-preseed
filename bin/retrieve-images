@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e -u -x
 cd "$(dirname "$0")"/../images
 
@@ -13,5 +13,5 @@ gunzip --quiet boot.img.gz
 
 # Retrieve netinst.iso
 
-export $(curl --location "https://github.com/mauchede/version-lister/raw/generated/_/debian/latest" | xargs)
+export $(curl --location "https://gitlab.com/mauchede/version-lister/raw/generated/_/debian/latest" | xargs)
 curl --location --output netinst.iso "${DEBIAN_RELEASE}"

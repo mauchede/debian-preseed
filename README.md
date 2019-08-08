@@ -28,14 +28,16 @@ sudo -E bin/configure-stick /dev/sdb
 2. Create your branch: `git checkout -b my-new-feature`.
 3. Commit your changes: `git commit -am 'Add some feature'`.
 4. Push to the branch: `git push origin my-new-feature`.
-5. Submit a pull request.
+5. Submit a [merge request](https://docs.gitlab.com/ee/user/project/merge_requests/).
 
-If you like / use this project, please let me known by adding a [★](https://help.github.com/articles/about-stars/) on the [GitHub repository](https://github.com/mauchede/debian-preseed).
+__Note__: [GitHub repository](https://github.com/mauchede/debian-preseed) is a mirror. [Merge request](https://docs.gitlab.com/ee/user/project/merge_requests/) has to be submitted on the [GitLab repository](https://gitlab.com/mauchede/debian-preseed).
+
+If you like / use this project, please let me known by adding a [★](https://help.github.com/articles/about-stars/) on the [GitHub repository](https://github.com/mauchede/debian-preseed) or on the [GitLab repository](https://gitlab.com/mauchede/debian-preseed).
 
 ## Links
 
 * [automatiser une installation de debian (fr)](https://wiki.deimos.fr/Automatiser_une_installation_de_Debian)
 * [debian wheezy keyboardless](http://stratusandtheswirl.blogspot.fr/2012/03/debian-testing-wheezy-keyboardless.html)
-* [mauchede/version-lister](https://github.com/mauchede/version-lister)
+* [mauchede/version-lister](https://gitlab.com/mauchede/version-lister)
 * [preseed example](https://www.debian.org/releases/jessie/example-preseed.txt)
 * [preseed snippets (fr)](https://medspx.fr/blog/Debian/preseed_snippets/)
